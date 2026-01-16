@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from analyze import get_itinerary
+from analyze import get_itinerary, ItineraryResponse
 
 app = Flask(__name__)
 
@@ -18,8 +18,8 @@ def itinerary():
         return jsonify({"error": "destination is too long (max 120 chars)"}), 400
 
     try:
-        result = get_itinerary(destination)
-        return jsonify(result), 200
+        result: ItineraryResponse = get_itinerary(destination)
+        return jsonify(result.dict()), 200
     except ValueError as e:
         # Client-side input errors
         return jsonify({"error": str(e)}), 400
